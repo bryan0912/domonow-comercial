@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DomoNow · Plataforma Comercial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* ── APP LAYOUT ── */
+    html, body { height: 100%; overflow: hidden; }
+    .app { display: flex; height: 100vh; overflow: hidden; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 265px; flex-shrink: 0;
+      background: var(--surface); border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow-y: auto;
+      transition: background .25s, border-color .25s;
+    }
+    .logo-wrap { padding: 18px 16px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    .logo-mark { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 38px; height: 38px; border-radius: 11px; flex-shrink: 0; background: linear-gradient(135deg, var(--purple), var(--purple-light)); display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 12px rgba(130,10,209,.3); }
+    .logo-name { font-family: 'Sora', sans-serif; font-size: 17px; font-weight: 800; color: var(--purple); letter-spacing: -.3px; }
+    .logo-sub { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+    .sidebar-top-btns { display: flex; gap: 6px; }
+    .icon-btn { width: 32px; height: 32px; border-radius: 9px; background: var(--surface2); border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--muted); transition: all .15s; }
+    .icon-btn:hover { background: var(--purple-tint); border-color: var(--purple); color: var(--purple); }
+
+    .nav-lbl { padding: 14px 16px 5px; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted2); }
+    .nav-item { display: flex; align-items: center; gap: 9px; margin: 1px 8px; padding: 9px 12px; border-radius: 10px; cursor: pointer; font-size: 13.5px; font-weight: 500; color: var(--muted); transition: all .14s; border: 1px solid transparent; user-select: none; }
+    .nav-item:hover { background: var(--surface2); color: var(--text2); }
+    .nav-item.active { background: var(--purple-tint); color: var(--purple); border-color: rgba(130,10,209,.18); font-weight: 600; }
+    [data-theme="dark"] .nav-item.active { background: rgba(130,10,209,.18); color: var(--purple-xlight); border-color: rgba(130,10,209,.3); }
+    .nav-icon { width: 22px; height: 22px; border-radius: 7px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+    .nav-badge { margin-left: auto; background: var(--surface2); border: 1px solid var(--border); border-radius: 999px; padding: 1px 7px; font-size: 10px; font-weight: 700; color: var(--muted); }
+    .nav-item.active .nav-badge { background: var(--purple); color: #fff; border-color: var(--purple); }
+    .nav-div { height: 1px; background: var(--border); margin: 8px 16px; }
+
+    /* User info at bottom of sidebar */
+    .sidebar-footer { margin-top: auto; padding: 14px 16px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 34px; height: 34px; border-radius: 10px; background: var(--purple-tint); border: 1px solid rgba(130,10,209,.2); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .user-name { font-size: 13px; font-weight: 600; color: var(--text); }
+    .user-role { font-size: 11px; color: var(--muted); }
+    .logout-btn { margin-left: auto; width: 28px; height: 28px; border-radius: 7px; background: none; border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--muted); transition: all .15s; }
+    .logout-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-bg); }
+
+    /* ── MAIN ── */
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+    .topbar { padding: 15px 26px 13px; border-bottom: 1px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-shrink: 0; box-shadow: var(--shadow-sm); transition: background .25s, border-color .25s; }
+    .topbar-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .hamburger { display: none; width: 34px; height: 34px; border-radius: 9px; background: var(--surface2); border: 1px solid var(--border); cursor: pointer; align-items: center; justify-content: center; font-size: 17px; color: var(--muted); flex-shrink: 0; }
+    .page-title { font-family: 'Sora', sans-serif; font-size: 21px; font-weight: 800; color: var(--text); letter-spacing: -.3px; }
+    .page-title .accent { color: var(--purple); }
+    .page-desc { font-size: 12.5px; color: var(--muted); margin-top: 1px; }
+
+    /* Search */
+    .search-wrap { position: relative; flex-shrink: 0; }
+    .search-box { display: flex; align-items: center; gap: 8px; background: var(--bg2); border: 1.5px solid var(--border); border-radius: 10px; padding: 8px 12px; width: 215px; transition: border-color .15s, background .25s; }
+    .search-box:focus-within { border-color: var(--purple); background: var(--surface); }
+    .search-box input { background: none; border: none; outline: none; color: var(--text); font-size: 13.5px; font-family: inherit; width: 100%; }
+    .search-box input::placeholder { color: var(--muted2); }
+    .sr-drop { position: absolute; top: calc(100% + 5px); left: 0; right: 0; background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; z-index: 200; box-shadow: var(--shadow-lg); overflow: hidden; max-height: 270px; overflow-y: auto; }
+    .sr-drop.hidden { display: none; }
+    .sr-item { padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--border); transition: background .12s; }
+    .sr-item:last-child { border-bottom: none; }
+    .sr-item:hover { background: var(--surface2); }
+    .sr-title { font-size: 13.5px; font-weight: 600; color: var(--text); }
+    .sr-sub { font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+    /* Funnel */
+    .funnel-bar { display: flex; align-items: center; gap: 6px; padding: 11px 26px; border-bottom: 1px solid var(--border); background: var(--surface); overflow-x: auto; flex-shrink: 0; transition: background .25s, border-color .25s; }
+    .funnel-bar::-webkit-scrollbar { height: 0; }
+    .f-pill { display: flex; align-items: center; gap: 6px; padding: 6px 13px; border-radius: 999px; border: 1.5px solid var(--border); font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; color: var(--muted); background: var(--bg2); transition: all .15s; }
+    .f-pill:hover { border-color: var(--purple); color: var(--purple); background: var(--purple-tint); }
+    .f-pill.active { background: var(--purple); color: #fff; border-color: var(--purple); box-shadow: 0 2px 8px rgba(130,10,209,.25); }
+    .f-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .7; }
+    .f-arrow { color: var(--border2); font-size: 16px; flex-shrink: 0; }
+
+    /* Content */
+    .content-wrap { flex: 1; overflow-y: auto; padding: 22px 26px 80px; }
+
+    /* ── OV CARDS ── */
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 13px; }
+    .ov-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; padding: 16px 18px; cursor: pointer; transition: all .18s; box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: 13px; }
+    .ov-card:hover { border-color: var(--purple); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+    .ov-icon { width: 40px; height: 40px; border-radius: 11px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; background: var(--purple-tint); border: 1px solid rgba(130,10,209,.15); }
+    [data-theme="dark"] .ov-icon { background: rgba(130,10,209,.15); }
+    .ov-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .ov-desc { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+    .ov-card-incall { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 11.5px; font-weight: 600; color: var(--purple); }
+    [data-theme="dark"] .ov-card-incall { color: var(--purple-xlight); }
+
+    /* Module pills */
+    .mod-row { display: flex; flex-wrap: wrap; gap: 10px; }
+    .mod-pill { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; padding: 9px 14px; font-size: 13px; font-weight: 600; color: var(--text2); box-shadow: var(--shadow-sm); }
+    .mod-pill span { font-size: 12px; color: var(--muted); font-weight: 400; }
+
+    /* ── STEPS ── */
+    .steps-list { display: flex; flex-direction: column; gap: 10px; }
+    .step-item { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-sm); transition: border-color .15s, background .25s; }
+    .step-item.open { border-color: rgba(130,10,209,.3); }
+    .step-hdr { display: flex; align-items: center; gap: 12px; padding: 13px 16px; cursor: pointer; transition: background .12s; user-select: none; }
+    .step-hdr:hover { background: var(--surface2); }
+    .step-num { width: 30px; height: 30px; border-radius: 9px; flex-shrink: 0; background: var(--purple); color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .step-item.open .step-num { background: var(--purple-deep); }
+    .step-ttl { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; }
+    .step-sub-lbl { font-size: 12px; color: var(--muted); margin-top: 1px; }
+    .step-chev { width: 22px; height: 22px; border-radius: 6px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 13px; transition: transform .2s, background .15s; flex-shrink: 0; }
+    .step-item.open .step-chev { transform: rotate(90deg); background: var(--purple-tint); color: var(--purple); border-color: rgba(130,10,209,.25); }
+    [data-theme="dark"] .step-item.open .step-chev { color: var(--purple-xlight); }
+    .step-body { display: none; padding: 0 16px 16px; }
+    .step-body.open { display: block; }
+    .m-tag { display: inline-block; padding: 2px 8px; border-radius: 5px; font-size: 10px; font-weight: 800; margin-bottom: 5px; letter-spacing: .04em; }
+    .m-challenger { background: var(--purple-tint); color: var(--purple); }
+    .m-spin { background: var(--blue-bg); color: var(--blue); }
+    [data-theme="dark"] .m-challenger { color: var(--purple-xlight); }
+
+    /* ── OBJECIONES ── */
+    .obj-list { display: flex; flex-direction: column; gap: 10px; }
+    .obj-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-sm); transition: border-color .15s; }
+    .obj-card.open { border-color: rgba(130,10,209,.3); }
+    .obj-hdr { display: flex; align-items: center; gap: 12px; padding: 13px 16px; cursor: pointer; transition: background .12s; user-select: none; }
+    .obj-hdr:hover { background: var(--surface2); }
+    .obj-icon { width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 17px; }
+    .obj-title { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; }
+    .obj-badge { padding: 3px 9px; border-radius: 999px; font-size: 10.5px; font-weight: 700; flex-shrink: 0; }
+    .obj-chev { width: 22px; height: 22px; border-radius: 6px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 13px; transition: transform .2s; flex-shrink: 0; }
+    .obj-body { display: none; padding: 0 16px 16px; border-top: 1px solid var(--border); }
+    .obj-body.open { display: block; }
+    .obj-sec { margin-top: 12px; }
+    .obj-sec-lbl { font-size: 10px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+
+    /* ── TIPS ── */
+    .tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(265px,1fr)); gap: 13px; }
+    .tip-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; padding: 18px 20px; box-shadow: var(--shadow-sm); }
+    .tip-card.hl { border-color: rgba(130,10,209,.3); background: var(--purple-tint); }
+    [data-theme="dark"] .tip-card.hl { background: rgba(130,10,209,.1); }
+    .tip-card h4 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+    .tip-card.hl h4 { color: var(--purple); }
+    [data-theme="dark"] .tip-card.hl h4 { color: var(--purple-xlight); }
+    .tip-card ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .tip-card ul li { font-size: 13px; color: var(--muted); padding-left: 16px; position: relative; line-height: 1.5; }
+    .tip-card ul li::before { content: "✦"; position: absolute; left: 0; color: var(--purple); font-size: 9px; top: 4px; }
+    [data-theme="dark"] .tip-card ul li::before { color: var(--purple-xlight); }
+    .tip-card.hl ul li { color: var(--text2); }
+
+    /* ═══════════════════════════════════
+       IN-CALL MODE
+    ═══════════════════════════════════ */
+    .incall-overlay {
+      position: fixed; inset: 0; z-index: 300;
+      background: var(--bg); display: none; flex-direction: column;
+      overflow: hidden;
+    }
+    .incall-overlay.show { display: flex; }
+
+    .incall-header {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 16px 24px; display: flex; align-items: center; gap: 16px;
+      flex-shrink: 0; box-shadow: var(--shadow-sm);
+    }
+    .incall-title { font-family: 'Sora', sans-serif; font-size: 17px; font-weight: 800; color: var(--text); flex: 1; }
+    .incall-channel { font-size: 12px; color: var(--muted); margin-top: 1px; }
+    .incall-close { padding: 8px 16px; border-radius: 9px; background: var(--red-bg); color: var(--red); border: 1px solid rgba(185,28,28,.2); font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all .15s; }
+    .incall-close:hover { background: var(--red); color: #fff; }
+
+    /* Progress bar */
+    .incall-progress { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 24px; flex-shrink: 0; }
+    .progress-track { background: var(--bg2); border-radius: 999px; height: 6px; overflow: hidden; margin-bottom: 8px; }
+    .progress-fill { height: 100%; background: var(--purple); border-radius: 999px; transition: width .4s ease; }
+    .progress-steps { display: flex; justify-content: space-between; }
+    .p-step { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; cursor: pointer; transition: all .15s; border: 1.5px solid var(--border); background: var(--surface2); color: var(--muted); }
+    .p-step.done { background: var(--purple); color: #fff; border-color: var(--purple); }
+    .p-step.current { background: var(--purple-tint); color: var(--purple); border-color: var(--purple); }
+    [data-theme="dark"] .p-step.current { color: var(--purple-xlight); }
+
+    /* Main step panel */
+    .incall-body { flex: 1; overflow-y: auto; padding: 24px; display: flex; gap: 20px; }
+    .incall-main { flex: 1; min-width: 0; }
+    .incall-sidebar { width: 300px; flex-shrink: 0; }
+    @media (max-width: 860px) { .incall-sidebar { display: none; } }
+
+    .incall-step-num { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .incall-num-badge { width: 36px; height: 36px; border-radius: 10px; background: var(--purple); color: #fff; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; font-family: 'Sora', sans-serif; }
+    .incall-step-label { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+    .incall-step-title { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 800; color: var(--text); margin-bottom: 4px; line-height: 1.2; }
+    .incall-step-obj { font-size: 14px; color: var(--muted); margin-bottom: 18px; }
+    .incall-scripts { display: flex; flex-direction: column; gap: 10px; }
+    .incall-script-line {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 14px 18px;
+      font-size: 14.5px; line-height: 1.65; color: var(--text2);
+      font-style: italic; transition: all .2s; cursor: default;
+      border-left: 4px solid var(--purple);
+    }
+    .incall-script-line:hover { border-color: var(--purple); background: var(--surface2); }
+
+    /* Navigation footer */
+    .incall-nav {
+      background: var(--surface); border-top: 1px solid var(--border);
+      padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0; gap: 12px;
+    }
+    .incall-nav-center { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .incall-step-counter { font-size: 13px; font-weight: 700; color: var(--purple); }
+    [data-theme="dark"] .incall-step-counter { color: var(--purple-xlight); }
+    .incall-step-name-sm { font-size: 11.5px; color: var(--muted); }
+    .incall-nav-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; transition: all .15s; border: 1.5px solid transparent; }
+    .btn-prev { background: var(--surface2); color: var(--text2); border-color: var(--border2); }
+    .btn-prev:hover { border-color: var(--purple); color: var(--purple); }
+    .btn-next { background: var(--purple); color: #fff; box-shadow: 0 2px 8px rgba(130,10,209,.3); }
+    .btn-next:hover { background: var(--purple-dark); }
+    .btn-finish { background: var(--green); color: #fff; }
+    .btn-finish:hover { filter: brightness(1.1); }
+
+    /* Incall sidebar panels */
+    .incall-panel { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+    .incall-panel h4 { font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--purple); margin-bottom: 10px; }
+    [data-theme="dark"] .incall-panel h4 { color: var(--purple-xlight); }
+    .incall-tip-text { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .incall-note-text { font-size: 13px; color: var(--gold); line-height: 1.5; }
+
+    /* Checklist trigger FAB */
+    .fab-checklist {
+      position: fixed; bottom: 28px; right: 28px; z-index: 200;
+      width: 54px; height: 54px; border-radius: 16px;
+      background: var(--purple); color: #fff;
+      border: none; cursor: pointer; font-size: 22px;
+      box-shadow: 0 6px 20px rgba(130,10,209,.4);
+      display: flex; align-items: center; justify-content: center;
+      transition: all .15s;
+    }
+    .fab-checklist:hover { background: var(--purple-dark); transform: scale(1.06); }
+    .fab-badge { position: absolute; top: -5px; right: -5px; background: var(--green); color: #fff; border-radius: 999px; width: 20px; height: 20px; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid var(--surface); }
+
+    /* ═══════════════════════════════════
+       CHECKLIST PANEL
+    ═══════════════════════════════════ */
+    .checklist-overlay {
+      position: fixed; inset: 0; z-index: 400; background: rgba(0,0,0,.3);
+      display: none; align-items: flex-end; justify-content: flex-end;
+      padding: 20px;
+    }
+    .checklist-overlay.show { display: flex; }
+    .checklist-panel {
+      width: 480px; max-height: 90vh; background: var(--surface);
+      border: 1.5px solid var(--border); border-radius: 20px;
+      box-shadow: var(--shadow-lg); display: flex; flex-direction: column;
+      overflow: hidden; animation: slideUp .2s ease;
+    }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .checklist-header {
+      padding: 18px 20px 16px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    }
+    .checklist-header h3 { font-family: 'Sora', sans-serif; font-size: 17px; font-weight: 800; color: var(--text); }
+    .checklist-tabs { display: flex; gap: 4px; margin-top: 4px; }
+    .cl-tab { padding: 5px 12px; border-radius: 7px; font-size: 12.5px; font-weight: 600; cursor: pointer; color: var(--muted); transition: all .14s; border: 1px solid transparent; }
+    .cl-tab.active { background: var(--purple-tint); color: var(--purple); border-color: rgba(130,10,209,.2); }
+    [data-theme="dark"] .cl-tab.active { color: var(--purple-xlight); }
+    .checklist-body { flex: 1; overflow-y: auto; padding: 18px 20px; }
+    .checklist-footer { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; flex-shrink: 0; }
+    .cl-pane { display: none; }
+    .cl-pane.active { display: block; }
+
+    /* Form fields */
+    .radio-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+    .radio-pill { padding: 6px 12px; border-radius: 999px; border: 1.5px solid var(--border); font-size: 12.5px; font-weight: 600; cursor: pointer; color: var(--muted); transition: all .15s; background: var(--bg2); }
+    .radio-pill.selected { background: var(--purple-tint); color: var(--purple); border-color: rgba(130,10,209,.3); }
+    [data-theme="dark"] .radio-pill.selected { color: var(--purple-xlight); }
+
+    /* History */
+    .history-list { display: flex; flex-direction: column; gap: 10px; }
+    .history-item { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 13px 15px; }
+    .history-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .history-name { font-size: 14px; font-weight: 700; color: var(--text); }
+    .history-date { font-size: 11px; color: var(--muted2); }
+    .history-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .h-tag { padding: 2px 8px; border-radius: 5px; font-size: 11px; font-weight: 600; background: var(--purple-tint); color: var(--purple); }
+    [data-theme="dark"] .h-tag { color: var(--purple-xlight); }
+    .history-notes { font-size: 12.5px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+    .empty-history { text-align: center; padding: 40px 20px; color: var(--muted); }
+    .empty-history .e-icon { font-size: 40px; margin-bottom: 10px; opacity: .4; }
+
+    /* Mobile */
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 50; }
+    .sidebar-overlay.show { display: block; }
+    @media (max-width: 840px) {
+      .sidebar { position: fixed; left: -265px; top: 0; bottom: 0; z-index: 60; box-shadow: var(--shadow-lg); transition: left .3s, background .25s; }
+      .sidebar.open { left: 0; }
+      .hamburger { display: flex; }
+      .search-box { width: 170px; }
+      .topbar { padding: 12px 16px; }
+      .content-wrap { padding: 16px 16px 80px; }
+      .funnel-bar { padding: 10px 16px; }
+      .checklist-panel { width: 100%; max-width: 100%; }
+      .checklist-overlay { padding: 0; align-items: flex-end; }
+      .checklist-panel { border-radius: 20px 20px 0 0; }
+    }
+    @media (max-width: 540px) { .search-wrap { display: none; } }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ════ SIDEBAR ════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo-wrap">
+      <div class="logo-mark">
+        <div class="logo-icon">🏢</div>
+        <div><div class="logo-name">DomoNow</div><div class="logo-sub">Plataforma Comercial</div></div>
+      </div>
+      <div class="sidebar-top-btns">
+        <button class="icon-btn" id="themeBtn" title="Cambiar tema">🌙</button>
+      </div>
+    </div>
+
+    <div class="nav-lbl">General</div>
+    <div class="nav-item active" data-view="overview"><div class="nav-icon">🏠</div>Vista general</div>
+    <div class="nav-lbl">Canales de contacto</div>
+    <div class="nav-item" data-view="llamada-entrante"><div class="nav-icon">📞</div>Llamadas entrantes<span class="nav-badge">8</span></div>
+    <div class="nav-item" data-view="llamada-fria"><div class="nav-icon">❄️</div>Llamada en frío<span class="nav-badge">8</span></div>
+    <div class="nav-item" data-view="whatsapp"><div class="nav-icon">💬</div>WhatsApp<span class="nav-badge">8</span></div>
+    <div class="nav-item" data-view="correo"><div class="nav-icon">✉️</div>Correo / Email<span class="nav-badge">8</span></div>
+    <div class="nav-lbl">Proceso comercial</div>
+    <div class="nav-item" data-view="calificacion"><div class="nav-icon">🎯</div>Calificación leads<span class="nav-badge">8</span></div>
+    <div class="nav-item" data-view="descubrimiento"><div class="nav-icon">🔍</div>Descubrimiento<span class="nav-badge">SPIN</span></div>
+    <div class="nav-item" data-view="negociacion"><div class="nav-icon">🤝</div>Negociación &amp; Cierre<span class="nav-badge">2</span></div>
+    <div class="nav-div"></div>
+    <div class="nav-lbl">Referencia rápida</div>
+    <div class="nav-item" data-view="objeciones"><div class="nav-icon">🛡️</div>Manejo objeciones<span class="nav-badge">15</span></div>
+    <div class="nav-item" data-view="tips"><div class="nav-icon">💡</div>Tips &amp; Buenas prácticas</div>
+
+    <div class="sidebar-footer">
+      <div class="user-avatar">👤</div>
+      <div>
+        <div class="user-name" id="sidebarUserName">Asesor</div>
+        <div class="user-role" id="sidebarUserRole">Equipo comercial</div>
+      </div>
+      <button class="logout-btn" id="logoutBtn" title="Cerrar sesión">↩</button>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+
+  <!-- ════ MAIN ════ -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger">☰</button>
+        <div>
+          <div class="page-title" id="pageTitle">Vista <span class="accent">General</span></div>
+          <div class="page-desc" id="pageDesc">Bienvenido a la plataforma comercial DomoNow</div>
+        </div>
+      </div>
+      <div class="search-wrap">
+        <div class="search-box">
+          <span style="color:var(--muted);font-size:14px">🔍</span>
+          <input type="text" id="searchInput" placeholder="Buscar guion, objeción...">
+        </div>
+        <div class="sr-drop hidden" id="srDrop"></div>
+      </div>
+    </div>
+
+    <div class="funnel-bar">
+      <div class="f-pill" data-stage="contacto"><span class="f-dot"></span>Contacto</div>
+      <div class="f-arrow">›</div>
+      <div class="f-pill" data-stage="calificacion"><span class="f-dot"></span>Calificación</div>
+      <div class="f-arrow">›</div>
+      <div class="f-pill" data-stage="descubrimiento"><span class="f-dot"></span>Descubrimiento</div>
+      <div class="f-arrow">›</div>
+      <div class="f-pill" data-stage="demo"><span class="f-dot"></span>Demo</div>
+      <div class="f-arrow">›</div>
+      <div class="f-pill" data-stage="negociacion"><span class="f-dot"></span>Negociación</div>
+      <div class="f-arrow">›</div>
+      <div class="f-pill" data-stage="cierre"><span class="f-dot"></span>Cierre</div>
+    </div>
+
+    <div class="content-wrap" id="contentArea"></div>
+  </div>
+</div>
+
+<!-- ════ IN-CALL OVERLAY ════ -->
+<div class="incall-overlay" id="incallOverlay">
+  <div class="incall-header">
+    <div style="flex:1">
+      <div class="incall-title" id="incallTitle">Modo en llamada</div>
+      <div class="incall-channel" id="incallChannel">Canal · Paso actual</div>
+    </div>
+    <button class="incall-close" onclick="closeIncall()">✕ Salir</button>
+  </div>
+
+  <div class="incall-progress">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-steps" id="progressSteps"></div>
+  </div>
+
+  <div class="incall-body">
+    <div class="incall-main">
+      <div class="incall-step-num">
+        <div class="incall-num-badge" id="incallNum">1</div>
+        <div class="incall-step-label" id="incallStepLabel">Paso 1 de 8</div>
+      </div>
+      <div class="incall-step-title" id="incallStepTitle">Título del paso</div>
+      <div class="incall-step-obj" id="incallStepObj">Objetivo</div>
+      <div class="incall-scripts" id="incallScripts"></div>
+    </div>
+
+    <div class="incall-sidebar">
+      <div class="incall-panel" id="incallTipPanel">
+        <h4>💡 Clave del paso</h4>
+        <div class="incall-tip-text" id="incallTipText"></div>
+      </div>
+      <div class="incall-panel" id="incallNotePanel">
+        <h4>📌 Nota estratégica</h4>
+        <div class="incall-note-text" id="incallNoteText"></div>
+      </div>
+      <div class="incall-panel">
+        <h4>🛡️ Objeciones frecuentes</h4>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+          <div onclick="nav('objeciones');closeIncall()" style="font-size:13px;color:var(--purple);cursor:pointer;padding:6px 10px;border-radius:7px;background:var(--purple-tint)">Ver todas las objeciones →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="incall-nav">
+    <button class="incall-nav-btn btn-prev" id="btnPrev" onclick="incallPrev()">← Anterior</button>
+    <div class="incall-nav-center">
+      <div class="incall-step-counter" id="incallCounter">Paso 1 / 8</div>
+      <div class="incall-step-name-sm" id="incallNavStepName"></div>
+    </div>
+    <button class="incall-nav-btn btn-next" id="btnNext" onclick="incallNext()">Siguiente →</button>
+  </div>
+</div>
+
+<!-- ════ CHECKLIST FAB ════ -->
+<button class="fab-checklist" id="fabChecklist" onclick="openChecklist()" title="Registro de llamada">
+  📋
+  <span class="fab-badge hidden" id="fabBadge">0</span>
+</button>
+
+<!-- ════ CHECKLIST PANEL ════ -->
+<div class="checklist-overlay" id="checklistOverlay">
+  <div class="checklist-panel">
+    <div class="checklist-header">
+      <div>
+        <h3>📋 Registro de llamada</h3>
+        <div class="checklist-tabs">
+          <div class="cl-tab active" data-pane="new">Nueva</div>
+          <div class="cl-tab" data-pane="history">Historial</div>
+        </div>
+      </div>
+      <button class="icon-btn" onclick="closeChecklist()" style="font-size:18px">✕</button>
+    </div>
+
+    <div class="checklist-body">
+      <!-- NEW CALL -->
+      <div class="cl-pane active" id="pane-new">
+        <div class="form-group">
+          <label class="form-label">Nombre del prospecto</label>
+          <input class="form-input" id="cl-nombre" type="text" placeholder="Ej: Carlos Martínez">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Canal de contacto</label>
+          <div class="radio-group" id="cl-canal">
+            <div class="radio-pill" data-val="📞 Llamada entrante">📞 Entrante</div>
+            <div class="radio-pill" data-val="❄️ Llamada en frío">❄️ Frío</div>
+            <div class="radio-pill" data-val="💬 WhatsApp">💬 WhatsApp</div>
+            <div class="radio-pill" data-val="✉️ Correo">✉️ Correo</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tipo de propiedad</label>
+          <select class="form-select" id="cl-tipo">
+            <option value="">Seleccionar...</option>
+            <option>PH – Penthouse</option>
+            <option>Conjunto residencial</option>
+            <option>Propiedad comercial</option>
+            <option>Edificio de oficinas</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Dolor principal detectado</label>
+          <div class="radio-group" id="cl-dolor">
+            <div class="radio-pill" data-val="Comunicación">📢 Comunicación</div>
+            <div class="radio-pill" data-val="Mantenimiento">🔧 Mantenimiento</div>
+            <div class="radio-pill" data-val="Financiero">💰 Financiero</div>
+            <div class="radio-pill" data-val="Seguridad">🔐 Seguridad</div>
+            <div class="radio-pill" data-val="Reservas">🏊 Reservas</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Urgencia</label>
+          <div class="radio-group" id="cl-urgencia">
+            <div class="radio-pill" data-val="Alta – Quiere implementar pronto">🔴 Alta</div>
+            <div class="radio-pill" data-val="Media – Evaluando opciones">🟡 Media</div>
+            <div class="radio-pill" data-val="Baja – Solo explorando">🟢 Baja</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Siguiente paso acordado</label>
+          <div class="radio-group" id="cl-siguiente">
+            <div class="radio-pill" data-val="Demo agendada">📅 Demo agendada</div>
+            <div class="radio-pill" data-val="Enviar info">📨 Enviar info</div>
+            <div class="radio-pill" data-val="Llamada de seguimiento">📞 Seguimiento</div>
+            <div class="radio-pill" data-val="Sin siguiente paso">❌ Sin siguiente paso</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notas adicionales</label>
+          <textarea class="form-textarea" id="cl-notas" placeholder="Decisores, contexto especial, objeciones planteadas..."></textarea>
+        </div>
+      </div>
+
+      <!-- HISTORY -->
+      <div class="cl-pane" id="pane-history">
+        <div id="historyContent"></div>
+      </div>
+    </div>
+
+    <div class="checklist-footer">
+      <button class="btn btn-primary" style="flex:1" onclick="saveChecklist()">💾 Guardar registro</button>
+      <button class="btn btn-outline" onclick="clearChecklist()">Limpiar</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script>
+
+// ══════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════
+const userRaw = localStorage.getItem('dn_user');
+if (!userRaw) { window.location.href = 'index.html'; }
+const currentUser = JSON.parse(userRaw || '{}');
+document.getElementById('sidebarUserName').textContent = currentUser.name || 'Asesor';
+document.getElementById('sidebarUserRole').textContent = currentUser.role === 'admin' ? 'Administrador' : 'Asesor comercial';
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  localStorage.removeItem('dn_user');
+  window.location.href = 'index.html';
+});
+
+// ══════════════════════════════════════════
+// THEME
+// ══════════════════════════════════════════
+const html = document.documentElement;
+const themeBtn = document.getElementById('themeBtn');
+function setTheme(dark) {
+  html.setAttribute('data-theme', dark ? 'dark' : 'light');
+  themeBtn.textContent = dark ? '☀️' : '🌙';
+  localStorage.setItem('dn-theme', dark ? 'dark' : 'light');
+}
+themeBtn.addEventListener('click', () => setTheme(html.getAttribute('data-theme') !== 'dark'));
+if (localStorage.getItem('dn-theme') === 'dark') setTheme(true);
+
+// ══════════════════════════════════════════
+// RENDER FUNCTIONS
+// ══════════════════════════════════════════
+function renderOverview() {
+  return `
+    <div class="sec-hdr"><h3>🗺️ Secciones del modelo comercial</h3><p>Selecciona cualquier sección para ver el guion completo o activa el <strong>Modo en llamada</strong> para seguirlo paso a paso.</p></div>
+    <div class="cards-grid mt3">${[
+      {icon:'📞',title:'Llamadas entrantes',desc:'Calificar, detectar dolor y agendar demo.',view:'llamada-entrante'},
+      {icon:'❄️',title:'Llamada en frío',desc:'Romper el hielo y abrir oportunidad.',view:'llamada-fria'},
+      {icon:'💬',title:'WhatsApp',desc:'Respuesta rápida y mover a demo.',view:'whatsapp'},
+      {icon:'✉️',title:'Correo / Email',desc:'Confirmar contacto y proponer reunión.',view:'correo'},
+      {icon:'🎯',title:'Calificación de leads',desc:'Validar leads calientes y seguimiento.',view:'calificacion'},
+      {icon:'🔍',title:'Descubrimiento',desc:'SPIN: Situación → Problema → Implicación → Valor.',view:'descubrimiento'},
+      {icon:'🤝',title:'Negociación & Cierre',desc:'Challenger + SPIN para cerrar desde el valor.',view:'negociacion'},
+      {icon:'🛡️',title:'Manejo de objeciones',desc:'15 objeciones documentadas con respuesta.',view:'objeciones'},
+    ].map(c => `
+      <div class="ov-card" onclick="nav('${c.view}')">
+        <div class="ov-icon">${c.icon}</div>
+        <div>
+          <div class="ov-title">${c.title}</div>
+          <div class="ov-desc">${c.desc}</div>
+          ${c.view !== 'objeciones' && c.view !== 'tips' ? `<div class="ov-card-incall">▶ Iniciar modo en llamada</div>` : ''}
+        </div>
+      </div>
+    `).join('')}</div>
+    <div class="divider"></div>
+    <div class="sec-hdr"><h3>🏢 Módulos de valor DomoNow</h3><p>Adaptá el pitch según la necesidad detectada en el cliente.</p></div>
+    <div class="mod-row mt3">${[
+      {icon:'📢',label:'Comunicación',tip:'Centraliza anuncios, notificaciones y canales'},
+      {icon:'🔧',label:'Mantenimiento',tip:'Solicitudes, asignaciones y seguimiento'},
+      {icon:'💰',label:'Financiero',tip:'Automatiza cobros, cartera y reportes'},
+      {icon:'🔐',label:'Seguridad / Accesos',tip:'Gestión de visitantes, ingresos y alertas'},
+      {icon:'🏊',label:'Reservas / Zonas comunes',tip:'Control sin conflictos ni reprocesos'},
+    ].map(m => `<div class="mod-pill">${m.icon} ${m.label} <span>— ${m.tip}</span></div>`).join('')}</div>
+  `;
+}
+
+function renderScript(k) {
+  const s = SCRIPTS[k]; if (!s) return '';
+  return `
+    <div class="flex-sb" style="margin-bottom:16px">
+      <div>
+        <div class="ch-tag ${s.cls}">${s.channel}</div>
+        <div style="font-size:13px;color:var(--muted);max-width:680px;line-height:1.6;margin-top:6px">${s.enfoque}</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="openIncall('${k}')">▶ Modo en llamada</button>
+        <button class="btn btn-outline" onclick="copyScript('${k}')">📋 Copiar guion</button>
+      </div>
+    </div>
+    <div class="sec-hdr"><h3>🎬 Guion paso a paso</h3></div>
+    <div class="steps-list">${s.steps.map(st => `
+      <div class="step-item" id="si-${k}-${st.n}">
+        <div class="step-hdr" onclick="toggleStep('${k}','${st.n}')">
+          <div class="step-num">${st.n}</div>
+          <div style="flex:1"><div class="step-ttl">${st.t}</div><div class="step-sub-lbl">${st.sub}</div></div>
+          <div class="step-chev">›</div>
+        </div>
+        <div class="step-body" id="sb-${k}-${st.n}">
+          ${st.s.map(q => `<div class="script-quote">${q}</div>`).join('')}
+          ${st.tip ? `<div class="step-tip">👉 ${st.tip}</div>` : ''}
+          ${st.note ? `<div class="step-note">📌 ${st.note}</div>` : ''}
+        </div>
+      </div>`).join('')}</div>
+    <div class="divider"></div>
+    <div class="meta-grid">
+      <div class="meta-box"><h5>Acción esperada (CTA)</h5><p>${s.cta}</p></div>
+      <div class="meta-box"><h5>Qué registrar en CRM</h5><p style="font-size:12.5px">${s.crm}</p></div>
+      <div class="meta-box"><h5>Señales para avanzar</h5><ul>${s.signals.map(x => `<li>${x}</li>`).join('')}</ul></div>
+      <div class="meta-box"><h5>Buenas prácticas</h5><ul>${s.buenas.map(x => `<li>${x}</li>`).join('')}</ul></div>
+    </div>
+  `;
+}
+
+function objCard(o, i, type) {
+  const dual = o.challenger && o.spin;
+  return `
+    <div class="obj-card" id="oc-${type}-${i}">
+      <div class="obj-hdr" onclick="toggleObj('${type}','${i}')">
+        <div class="obj-icon">${o.icon}</div>
+        <div class="obj-title">${o.title}</div>
+        <div class="obj-badge ${o.bc}">${o.badge}</div>
+        <div class="obj-chev" id="ochev-${type}-${i}">›</div>
+      </div>
+      <div class="obj-body" id="ob-${type}-${i}">
+        <div class="obj-sec"><div class="obj-sec-lbl">💬 Respuesta sugerida</div>
+          ${dual
+            ? `<div class="m-tag m-challenger">CHALLENGER</div><div class="script-quote">${o.challenger}</div>
+               <div class="m-tag m-spin" style="margin-top:8px">SPIN</div><div class="script-quote">${o.spin}</div>`
+            : `<div class="script-quote">${o.resp}</div>`}
+        </div>
+        ${o.preguntas && o.preguntas.length ? `
+          <div class="obj-sec"><div class="obj-sec-lbl">🔍 Preguntas de profundización</div>
+            ${o.preguntas.map(p => `<div class="step-tip">→ ${p}</div>`).join('')}
+          </div>` : ''}
+        <div class="obj-sec"><div class="obj-sec-lbl">✅ Cierre</div><div class="script-quote">${o.cierre}</div></div>
+      </div>
+    </div>`;
+}
+
+function renderObjeciones() {
+  return `
+    <div class="sec-hdr"><h3>🚫 Objeciones en prospección / llamada fría</h3><p>Validar → Profundizar → Responder con valor → Cerrar con siguiente paso</p></div>
+    <div class="obj-list mt3">${OBJ_FRIA.map((o,i) => objCard(o,i,'fria')).join('')}</div>
+    <div class="divider"></div>
+    <div class="sec-hdr"><h3>🏁 Objeciones en etapa de cierre</h3><p>Doble enfoque: Challenger + SPIN</p></div>
+    <div class="obj-list mt3">${OBJ_CIERRE.map((o,i) => objCard(o,i,'cierre')).join('')}</div>
+    <div class="divider"></div>
+    <div class="step-note">🔑 <strong>Regla clave:</strong> Las objeciones no son rechazo, son dudas con interés. 1) Validar · 2) Profundizar · 3) Responder con valor · 4) Cerrar con siguiente paso.</div>
+  `;
+}
+
+function renderTips() {
+  return `<div class="tips-grid">${TIPS.map(t => `
+    <div class="tip-card ${t.hl ? 'hl' : ''}">
+      <h4>${t.t}</h4>
+      <ul>${t.items.map(i => `<li>${i}</li>`).join('')}</ul>
+    </div>`).join('')}</div>`;
+}
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+const VIEWS = {
+  overview:           { title:'Vista <span class="accent">General</span>', desc:'Bienvenido a la plataforma comercial DomoNow', render: renderOverview },
+  'llamada-entrante': { title:'📞 Llamadas <span class="accent">Entrantes</span>', desc:'Guion completo para llamadas de prospectos interesados.', render:()=>renderScript('llamada-entrante') },
+  'llamada-fria':     { title:'❄️ Llamada en <span class="accent">Frío</span>', desc:'Guion para prospección fría.', render:()=>renderScript('llamada-fria') },
+  whatsapp:           { title:'💬 Script de <span class="accent">WhatsApp</span>', desc:'Flujo conversacional para chats entrantes.', render:()=>renderScript('whatsapp') },
+  correo:             { title:'✉️ Script de <span class="accent">Correo</span>', desc:'Plantilla de respuesta para formularios web y contacto directo.', render:()=>renderScript('correo') },
+  calificacion:       { title:'🎯 Calificación de <span class="accent">Leads</span>', desc:'Scripts para calificar leads calientes.', render:()=>renderScript('calificacion') },
+  descubrimiento:     { title:'🔍 Descubrimiento <span class="accent">SPIN</span>', desc:'Metodología SPIN + Solution Selling.', render:()=>renderScript('descubrimiento') },
+  negociacion:        { title:'🤝 Negociación y <span class="accent">Cierre</span>', desc:'Guiones Challenger + SPIN para cerrar desde el valor.', render:()=>renderScript('negociacion') },
+  objeciones:         { title:'🛡️ Manejo de <span class="accent">Objeciones</span>', desc:'Respuestas estructuradas para las principales objeciones.', render: renderObjeciones },
+  tips:               { title:'💡 Tips y <span class="accent">Buenas Prácticas</span>', desc:'Claves estratégicas para el equipo comercial.', render: renderTips }
+};
+
+function nav(k) {
+  const v = VIEWS[k]; if (!v) return;
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('active', el.dataset.view === k));
+  document.getElementById('pageTitle').innerHTML = v.title;
+  document.getElementById('pageDesc').textContent = v.desc;
+  document.getElementById('contentArea').innerHTML = v.render();
+  document.getElementById('contentArea').scrollTop = 0;
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+function toggleStep(k, n) {
+  const item = document.getElementById(`si-${k}-${n}`);
+  const body = document.getElementById(`sb-${k}-${n}`);
+  const open = item.classList.toggle('open');
+  body.classList.toggle('open', open);
+}
+
+function toggleObj(type, i) {
+  const card = document.getElementById(`oc-${type}-${i}`);
+  const body = document.getElementById(`ob-${type}-${i}`);
+  const chev = document.getElementById(`ochev-${type}-${i}`);
+  const open = card.classList.toggle('open');
+  body.classList.toggle('open', open);
+  if (chev) { chev.style.transform = open ? 'rotate(90deg)' : ''; }
+}
+
+// ══════════════════════════════════════════
+// IN-CALL MODE
+// ══════════════════════════════════════════
+let incallData = null;
+let incallStep = 0;
+
+function openIncall(scriptKey) {
+  const s = SCRIPTS[scriptKey];
+  if (!s) return;
+  incallData = s;
+  incallStep = 0;
+  document.getElementById('incallTitle').textContent = s.channel.replace(/[📞❄️💬✉️🎯🔍🤝]/g,'').trim();
+  document.getElementById('incallOverlay').classList.add('show');
+  renderIncallStep();
+}
+
+function closeIncall() {
+  document.getElementById('incallOverlay').classList.remove('show');
+}
+
+function renderIncallStep() {
+  if (!incallData) return;
+  const steps = incallData.steps;
+  const step = steps[incallStep];
+  const total = steps.length;
+
+  // Header
+  document.getElementById('incallChannel').textContent = `${incallData.channel} · Paso ${incallStep+1} de ${total}`;
+
+  // Progress bar
+  document.getElementById('progressFill').style.width = `${((incallStep + 1) / total) * 100}%`;
+
+  // Progress dots
+  const stepsEl = document.getElementById('progressSteps');
+  stepsEl.innerHTML = steps.map((st, i) => `
+    <div class="p-step ${i < incallStep ? 'done' : i === incallStep ? 'current' : ''}"
+         onclick="incallGoto(${i})" title="${st.t}">${i+1}</div>
+  `).join('');
+
+  // Step content
+  document.getElementById('incallNum').textContent = step.n;
+  document.getElementById('incallStepLabel').textContent = `Paso ${incallStep+1} de ${total}`;
+  document.getElementById('incallStepTitle').textContent = step.t;
+  document.getElementById('incallStepObj').textContent = step.sub;
+  document.getElementById('incallCounter').textContent = `Paso ${incallStep+1} / ${total}`;
+  document.getElementById('incallNavStepName').textContent = step.t;
+
+  // Scripts
+  document.getElementById('incallScripts').innerHTML = step.s.map(sc =>
+    `<div class="incall-script-line">${sc}</div>`
+  ).join('');
+
+  // Tip / note
+  const tipPanel = document.getElementById('incallTipPanel');
+  const notePanel = document.getElementById('incallNotePanel');
+  if (step.tip) {
+    tipPanel.style.display = '';
+    document.getElementById('incallTipText').textContent = step.tip;
+  } else { tipPanel.style.display = 'none'; }
+  if (step.note) {
+    notePanel.style.display = '';
+    document.getElementById('incallNoteText').textContent = step.note;
+  } else { notePanel.style.display = 'none'; }
+
+  // Buttons
+  document.getElementById('btnPrev').style.visibility = incallStep === 0 ? 'hidden' : 'visible';
+  const btnNext = document.getElementById('btnNext');
+  if (incallStep === total - 1) {
+    btnNext.textContent = '✅ Finalizar';
+    btnNext.className = 'incall-nav-btn btn-finish';
+    btnNext.onclick = () => { closeIncall(); openChecklist(); };
+  } else {
+    btnNext.textContent = 'Siguiente →';
+    btnNext.className = 'incall-nav-btn btn-next';
+    btnNext.onclick = incallNext;
+  }
+}
+
+function incallNext() {
+  if (!incallData || incallStep >= incallData.steps.length - 1) return;
+  incallStep++;
+  renderIncallStep();
+  document.getElementById('incallOverlay').querySelector('.incall-body').scrollTop = 0;
+}
+
+function incallPrev() {
+  if (incallStep <= 0) return;
+  incallStep--;
+  renderIncallStep();
+}
+
+function incallGoto(i) {
+  incallStep = i;
+  renderIncallStep();
+}
+
+// ══════════════════════════════════════════
+// CHECKLIST
+// ══════════════════════════════════════════
+function openChecklist() {
+  document.getElementById('checklistOverlay').classList.add('show');
+  renderHistory();
+}
+
+function closeChecklist() {
+  document.getElementById('checklistOverlay').classList.remove('show');
+}
+
+// Tab switching
+document.querySelectorAll('.cl-tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.cl-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.cl-pane').forEach(p => p.classList.remove('active'));
+    this.classList.add('active');
+    const pane = document.getElementById(`pane-${this.dataset.pane}`);
+    if (pane) pane.classList.add('active');
+    if (this.dataset.pane === 'history') renderHistory();
+  });
+});
+
+// Radio pills
+document.querySelectorAll('.radio-group').forEach(group => {
+  group.addEventListener('click', function(e) {
+    const pill = e.target.closest('.radio-pill');
+    if (!pill) return;
+    group.querySelectorAll('.radio-pill').forEach(p => p.classList.remove('selected'));
+    pill.classList.add('selected');
+  });
+});
+
+function getRadioVal(groupId) {
+  const sel = document.querySelector(`#${groupId} .radio-pill.selected`);
+  return sel ? sel.dataset.val : '';
+}
+
+function saveChecklist() {
+  const nombre = document.getElementById('cl-nombre').value.trim();
+  if (!nombre) { alert('Ingresa el nombre del prospecto'); return; }
+
+  const record = {
+    id: Date.now(),
+    fecha: new Date().toLocaleDateString('es-CO', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }),
+    asesor: currentUser.name,
+    nombre,
+    canal: getRadioVal('cl-canal'),
+    tipo: document.getElementById('cl-tipo').value,
+    dolor: getRadioVal('cl-dolor'),
+    urgencia: getRadioVal('cl-urgencia'),
+    siguiente: getRadioVal('cl-siguiente'),
+    notas: document.getElementById('cl-notas').value.trim()
+  };
+
+  const history = JSON.parse(localStorage.getItem('dn_calls') || '[]');
+  history.unshift(record);
+  localStorage.setItem('dn_calls', JSON.stringify(history));
+
+  updateFabBadge();
+  clearChecklist();
+  // Switch to history
+  document.querySelectorAll('.cl-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.cl-pane').forEach(p => p.classList.remove('active'));
+  document.querySelector('[data-pane="history"]').classList.add('active');
+  document.getElementById('pane-history').classList.add('active');
+  renderHistory();
+}
+
+function clearChecklist() {
+  document.getElementById('cl-nombre').value = '';
+  document.getElementById('cl-tipo').value = '';
+  document.getElementById('cl-notas').value = '';
+  document.querySelectorAll('.radio-pill').forEach(p => p.classList.remove('selected'));
+}
+
+function renderHistory() {
+  const history = JSON.parse(localStorage.getItem('dn_calls') || '[]');
+  const el = document.getElementById('historyContent');
+  if (!history.length) {
+    el.innerHTML = `<div class="empty-history"><div class="e-icon">📋</div><p>Aún no hay registros de llamadas.<br>Crea el primero desde la pestaña "Nueva".</p></div>`;
+    return;
+  }
+  el.innerHTML = `<div class="history-list">${history.map(r => `
+    <div class="history-item">
+      <div class="history-meta">
+        <div class="history-name">${r.nombre}</div>
+        <div class="history-date">${r.fecha}</div>
+      </div>
+      <div style="font-size:12px;color:var(--muted)">${r.asesor || ''} · ${r.tipo || 'Sin tipo'}</div>
+      <div class="history-tags">
+        ${r.canal ? `<div class="h-tag">${r.canal}</div>` : ''}
+        ${r.dolor ? `<div class="h-tag">${r.dolor}</div>` : ''}
+        ${r.urgencia ? `<div class="h-tag">${r.urgencia.split('–')[0].trim()}</div>` : ''}
+        ${r.siguiente ? `<div class="h-tag">${r.siguiente}</div>` : ''}
+      </div>
+      ${r.notas ? `<div class="history-notes">${r.notas}</div>` : ''}
+    </div>
+  `).join('')}</div>`;
+}
+
+function updateFabBadge() {
+  const history = JSON.parse(localStorage.getItem('dn_calls') || '[]');
+  const badge = document.getElementById('fabBadge');
+  if (history.length > 0) {
+    badge.textContent = history.length > 9 ? '9+' : history.length;
+    badge.classList.remove('hidden');
+  } else {
+    badge.classList.add('hidden');
+  }
+}
+
+// Close checklist on overlay click
+document.getElementById('checklistOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeChecklist();
+});
+
+// ══════════════════════════════════════════
+// COPY
+// ══════════════════════════════════════════
+function copyScript(k) {
+  const s = SCRIPTS[k]; if (!s) return;
+  let txt = `${s.channel} – Guion Completo DomoNow\n${'─'.repeat(48)}\n\nOBJETIVO: ${s.obj}\n\n`;
+  s.steps.forEach(st => {
+    txt += `PASO ${st.n}: ${st.t}\nObjetivo: ${st.sub}\n`;
+    st.s.forEach(q => txt += `  → ${q.replace(/[«»""]/g,'')}\n`);
+    if (st.tip) txt += `  💡 ${st.tip}\n`;
+    txt += '\n';
+  });
+  txt += `\nACCIÓN ESPERADA: ${s.cta}\nCRM: ${s.crm}\n`;
+  navigator.clipboard.writeText(txt).then(() => {
+    const b = event.target, orig = b.textContent;
+    b.textContent = '✅ Copiado!';
+    setTimeout(() => b.textContent = orig, 2200);
+  }).catch(() => alert('Copia manual si el botón no funciona.'));
+}
+
+// ══════════════════════════════════════════
+// SEARCH
+// ══════════════════════════════════════════
+const SIDX = [];
+Object.entries(SCRIPTS).forEach(([k, s]) => s.steps.forEach(st => SIDX.push({ title:`${s.channel} – ${st.t}`, sub:st.sub, view:k })));
+OBJ_FRIA.forEach(o => SIDX.push({ title:o.title, sub:'Objeción en prospección', view:'objeciones' }));
+OBJ_CIERRE.forEach(o => SIDX.push({ title:o.title, sub:'Objeción en cierre', view:'objeciones' }));
+
+const sInput = document.getElementById('searchInput');
+const sDrop = document.getElementById('srDrop');
+sInput.addEventListener('input', function() {
+  const q = this.value.trim().toLowerCase();
+  if (q.length < 2) { sDrop.classList.add('hidden'); return; }
+  const hits = SIDX.filter(it => it.title.toLowerCase().includes(q) || it.sub.toLowerCase().includes(q)).slice(0, 7);
+  if (!hits.length) { sDrop.classList.add('hidden'); return; }
+  sDrop.innerHTML = hits.map(h => `
+    <div class="sr-item" onclick="nav('${h.view}');sInput.value='';sDrop.classList.add('hidden')">
+      <div class="sr-title">${h.title}</div>
+      <div class="sr-sub">${h.sub}</div>
+    </div>`).join('');
+  sDrop.classList.remove('hidden');
+});
+document.addEventListener('click', e => { if (!e.target.closest('.search-wrap')) sDrop.classList.add('hidden'); });
+
+// ══════════════════════════════════════════
+// FUNNEL + NAV + MOBILE
+// ══════════════════════════════════════════
+const FMAP = { contacto:'llamada-entrante', calificacion:'calificacion', descubrimiento:'descubrimiento', demo:'descubrimiento', negociacion:'negociacion', cierre:'negociacion' };
+document.querySelectorAll('.f-pill').forEach(p => p.addEventListener('click', function() {
+  document.querySelectorAll('.f-pill').forEach(x => x.classList.remove('active'));
+  this.classList.add('active');
+  const t = FMAP[this.dataset.stage];
+  if (t) nav(t);
+}));
+
+document.querySelectorAll('.nav-item').forEach(item => item.addEventListener('click', function() {
+  if (this.dataset.view) nav(this.dataset.view);
+}));
+
+document.getElementById('hamburger').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+});
+document.getElementById('overlay').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+});
+
+// ── INIT ──
+updateFabBadge();
+nav('overview');
+</script>
+</body>
+</html>
