@@ -260,3 +260,64 @@ const TIPS = [
   { t:'🚫 Errores a evitar', items:['Hablar solo de funcionalidades (vender resultado, no software)','Defender el precio sin contexto','Aceptar objeciones sin profundizar','Cerrar una llamada sin definir el siguiente paso'] },
   { t:'💎 Pitch de valor DomoNow', items:['❌ "Tenemos una plataforma con varios módulos..."','✅ "Te ayudamos a tener más control, menos reprocesos y una operación más organizada."','Reducción de carga operativa → resultado tangible','Mayor control y trazabilidad → tranquilidad del administrador'], hl:true }
 ];
+
+// ── OBJECIONES DE MÓDULOS Y CAPACIDAD ──────────────────────────────────────
+// Para agregar más: copia uno de los bloques { ... } y pégalo al final de la lista
+const OBJ_MODULOS = [
+  {
+    icon: '🧩',
+    title: 'Necesito módulos específicos, no un paquete completo',
+    badge: 'Técnica / Producto',
+    bc: 'badge-blue',
+    trasfondo: 'El cliente piensa en software como "menú a la carta". Está comparando con modelos modulares legacy y no entiende el enfoque integral.',
+    resp: '«Entiendo completamente que quieras algo ajustado a necesidades puntuales. Justamente lo que hemos aprendido en propiedad horizontal es que cuando se compran módulos separados, se termina fragmentando la operación: seguridad por un lado, comunicación por otro, mantenimiento en Excel... y eso genera más reprocesos. En DomoNow diseñamos paquetes ya integrados porque los procesos de la copropiedad están conectados entre sí. Por ejemplo: un visitante impacta seguridad, pero también genera comunicación con residentes, y puede terminar en una solicitud o incidente. Por eso nuestro modelo no es vender módulos sueltos, sino asegurar que toda la operación funcione de forma integrada, con trazabilidad completa.»',
+    preguntas: [
+      '«¿Cuáles son los módulos específicos que más necesitas hoy?»',
+      '«¿Has tenido experiencia con sistemas modulares antes? ¿Cómo fue esa experiencia?»'
+    ],
+    cierre: '«Más que venderte funcionalidades, buscamos que tu operación funcione mejor como un todo.»',
+    estrategia: 'No ceder a "desarmar" el producto · Reenfocar a eficiencia operativa · Mostrar riesgo de fragmentación'
+  },
+  {
+    icon: '💾',
+    title: '100 MB para documentos es muy poco',
+    badge: 'Técnica / Capacidad',
+    bc: 'badge-purple',
+    trasfondo: 'Percepción de limitación técnica. Miedo a restricción de información. Quieren usarlo como repositorio pesado tipo Google Drive.',
+    resp: '«Es una muy buena pregunta. Hoy los 100 MB están pensados para documentos operativos clave de la copropiedad: actas, reglamentos, certificados y comunicaciones importantes. No buscamos que el sistema sea un repositorio masivo, sino una herramienta de gestión donde la información relevante esté organizada, accesible y trazable. Adicionalmente, estamos trabajando en ampliaciones de capacidad y en integraciones futuras con repositorios externos si el volumen lo requiere.»',
+    preguntas: [
+      '«¿Qué tipo de documentos necesitarían almacenar principalmente?»',
+      '«¿Hoy cómo están gestionando esos documentos?»'
+    ],
+    cierre: '«Lo importante no es cuánto se guarda, sino qué tan fácil es encontrar y usar la información clave cuando se necesita.»',
+    estrategia: 'Reencuadrar el uso (gestión vs almacenamiento) · Mostrar roadmap de evolución · Evitar prometer almacenamiento ilimitado'
+  },
+  {
+    icon: '🏆',
+    title: '¿Qué los hace diferentes frente a otros softwares?',
+    badge: 'Comparación',
+    bc: 'badge-gold',
+    trasfondo: 'Comparación directa con Sifinca, Comunidad Feliz, etc. Necesidad de justificar el cambio. Sensibilidad al precio.',
+    resp: '«Más que un software administrativo, DomoNow está pensado como una plataforma de operación de la copropiedad. Mientras otros sistemas se enfocan en contabilidad o módulos aislados, nosotros atacamos tres dolores principales: 1) Seguridad y control de accesos con QR, validación y alertas. 2) Comunicación efectiva con residentes tipo red social, no solo correos. 3) Trazabilidad de toda la operación, todo queda registrado. Esto no solo mejora la gestión, sino que reduce conflictos, tiempos operativos y aumenta la percepción de valor del administrador.»',
+    preguntas: [
+      '«¿Con qué sistema nos están comparando específicamente?»',
+      '«¿Qué es lo que más valoran de la solución que están evaluando?»'
+    ],
+    cierre: '«No competimos por tener más módulos, sino por hacer que la copropiedad funcione mejor en el día a día.»',
+    estrategia: 'Diferenciadores clave: Integral vs módulos aislados · Seguridad con QR y botón pánico · Comunicación tipo red social · Trazabilidad completa · Roadmap activo · Acompañamiento en implementación'
+  },
+  {
+    icon: '🔄',
+    title: '¿Qué pasa con la información cuando cambia el administrador?',
+    badge: 'Confianza / Legal',
+    bc: 'badge-green',
+    trasfondo: 'Miedo a pérdida de datos. Confianza institucional. Implicación legal (Ley 675). MUY importante manejarlo bien.',
+    resp: '«En DomoNow la información no le pertenece a una persona, sino a la copropiedad. El administrador es un actor temporal, pero la información es institucional. Cuando hay cambio de administrador: la información permanece en la plataforma, se hace transferencia de accesos y roles, y se mantiene toda la trazabilidad histórica. Esto protege a la copropiedad frente a pérdida de información, falta de empalme y problemas de gestión anteriores.»',
+    preguntas: [
+      '«¿Han tenido alguna experiencia de pérdida de información con cambios anteriores?»',
+      '«¿Quién sería el responsable institucional de la plataforma más allá del administrador?»'
+    ],
+    cierre: '«DomoNow garantiza que la información no dependa de personas, sino que permanezca como activo de la copropiedad.»',
+    estrategia: 'Enfatizar propiedad de la data (copropiedad, no persona) · Hablar de continuidad operativa · Relacionarlo con profesionalización del sector'
+  }
+];

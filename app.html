@@ -330,7 +330,7 @@
     <div class="nav-item" data-view="negociacion"><div class="nav-icon">🤝</div>Negociación &amp; Cierre<span class="nav-badge">2</span></div>
     <div class="nav-div"></div>
     <div class="nav-lbl">Referencia rápida</div>
-    <div class="nav-item" data-view="objeciones"><div class="nav-icon">🛡️</div>Manejo objeciones<span class="nav-badge">15</span></div>
+    <div class="nav-item" data-view="objeciones"><div class="nav-icon">🛡️</div>Manejo objeciones<span class="nav-badge">19</span></div>
     <div class="nav-item" data-view="tips"><div class="nav-icon">💡</div>Tips &amp; Buenas prácticas</div>
 
     <div class="sidebar-footer">
@@ -643,6 +643,7 @@ function objCard(o, i, type) {
         <div class="obj-chev" id="ochev-${type}-${i}">›</div>
       </div>
       <div class="obj-body" id="ob-${type}-${i}">
+        ${o.trasfondo ? `<div class="obj-sec"><div class="obj-sec-lbl">🔎 Qué hay detrás</div><div class="step-note" style="margin-top:4px">${o.trasfondo}</div></div>` : ''}
         <div class="obj-sec"><div class="obj-sec-lbl">💬 Respuesta sugerida</div>
           ${dual
             ? `<div class="m-tag m-challenger">CHALLENGER</div><div class="script-quote">${o.challenger}</div>
@@ -654,6 +655,7 @@ function objCard(o, i, type) {
             ${o.preguntas.map(p => `<div class="step-tip">→ ${p}</div>`).join('')}
           </div>` : ''}
         <div class="obj-sec"><div class="obj-sec-lbl">✅ Cierre</div><div class="script-quote">${o.cierre}</div></div>
+        ${o.estrategia ? `<div class="obj-sec"><div class="obj-sec-lbl">🎯 Manejo estratégico</div><div class="step-tip" style="margin-top:4px">💡 ${o.estrategia}</div></div>` : ''}
       </div>
     </div>`;
 }
@@ -665,6 +667,9 @@ function renderObjeciones() {
     <div class="divider"></div>
     <div class="sec-hdr"><h3>🏁 Objeciones en etapa de cierre</h3><p>Doble enfoque: Challenger + SPIN</p></div>
     <div class="obj-list mt3">${OBJ_CIERRE.map((o,i) => objCard(o,i,'cierre')).join('')}</div>
+    <div class="divider"></div>
+    <div class="sec-hdr"><h3>🧩 Objeciones sobre módulos y capacidad</h3><p>Aparecen en fase de evaluación técnica o comparación de producto. Se responden con educación + diferenciación.</p></div>
+    <div class="obj-list mt3">${OBJ_MODULOS.map((o,i) => objCard(o,i,'modulos')).join('')}</div>
     <div class="divider"></div>
     <div class="step-note">🔑 <strong>Regla clave:</strong> Las objeciones no son rechazo, son dudas con interés. 1) Validar · 2) Profundizar · 3) Responder con valor · 4) Cerrar con siguiente paso.</div>
   `;
@@ -962,6 +967,7 @@ const SIDX = [];
 Object.entries(SCRIPTS).forEach(([k, s]) => s.steps.forEach(st => SIDX.push({ title:`${s.channel} – ${st.t}`, sub:st.sub, view:k })));
 OBJ_FRIA.forEach(o => SIDX.push({ title:o.title, sub:'Objeción en prospección', view:'objeciones' }));
 OBJ_CIERRE.forEach(o => SIDX.push({ title:o.title, sub:'Objeción en cierre', view:'objeciones' }));
+OBJ_MODULOS.forEach(o => SIDX.push({ title:o.title, sub:'Objeción sobre módulos y capacidad', view:'objeciones' }));
 
 const sInput = document.getElementById('searchInput');
 const sDrop = document.getElementById('srDrop');
